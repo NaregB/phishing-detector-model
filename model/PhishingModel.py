@@ -1,6 +1,5 @@
 import pandas as pd
 from sklearn.feature_selection import mutual_info_classif
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from joblib import dump, load
 
@@ -12,7 +11,6 @@ class PhishingModel:
 
     # default values
     model_path = "model/PhishingModel.joblib"
-    features_count = 17
     data = pd.read_csv("dataset/phishing.csv")
 
     def split_labels(self):
@@ -37,7 +35,7 @@ class PhishingModel:
         return mi_scores
 
     def get_features(self):
-        return self.mi_scores().head(self.features_count).index.tolist()
+        return ['text_link_disparity', 're_mail', 'urls', 'body_richness', 'contains_prime_targets', 'contains_account', 'domains', 'HTML', 'malicious_urls', 'ip_urls', 'attachments', 'dots_count', 'hex_urls', 'mailto', 'contains_update', 'contains_access']
 
     def get_data_with_mi_features(self):
         """
@@ -56,15 +54,12 @@ class PhishingModel:
         """
         X, y = self.get_data_with_mi_features()
 
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=True)
-
         rfc = RandomForestClassifier(
-            n_estimators=500,
-            max_depth=32,
+            n_estimators=10,
             n_jobs=64
         )
 
-        rfc.fit(X_train, y_train)
+        rfc.fit(X, y)
 
         return rfc
 

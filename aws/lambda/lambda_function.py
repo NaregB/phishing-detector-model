@@ -37,7 +37,6 @@ def lambda_handler(event, context):
         'HTML',
         'malicious_urls',
         'ip_urls',
-        'general_salutation',
         'attachments',
         'dots_count',
         'hex_urls',
